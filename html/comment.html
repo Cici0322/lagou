@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>详情</title>
+		<script src="jquery-1.12.4.min.js"></script>
+		<link rel="stylesheet" href="index.css" />
+		<link rel="stylesheet" href="pagination.css" />
+		<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		<style type="text/css">
+			.table, .box, #tr-t{
+				width: 900px;
+				margin: 0 auto;
+			}
+			.table tr td,#tr-t td{
+				width: 100px;
+				text-align: center;
+				border: 1px solid #979797;
+			}
+			#tr-t{
+				width: 900px;
+				height: 35px;
+			}
+			#tr-t td{
+				width: 100px;
+			}
+			#tr-t:nth-child(even){
+				background: lightcyan;
+			}
+			#tr-t:nth-child(odd){
+				background: bisque;
+			}
+			#sc,#xg{
+				cursor:pointer;
+				/*background: red;*/
+			}
+		</style>
+	</head>
+	<body>
+		<div class="header">
+			<div class="nav">
+				<ul class="nav-l">
+					<li><a href="#">拉勾网管理系统</a></li>
+					<li><a href="index.html">首页</a></li>
+					<li><a href="#">职位管理</a></li>
+				</ul>
+				<ul class="nav-r">
+					<li id="username" style="color: white;"></li>
+					<li><a href="/index.html">注销</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="main" style="width: 1164px;height: 35px;margin-top: 20px;">
+			<p style="float: left;margin-left: 154px;">职位详情</p>	
+			<button type="button" id="tj" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo" style="float: right;margin-right: 94px;">添加</button>
+		</div>	
+		<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+		  <div class="modal-dialog" role="document">
+			<div class="modal-content">
+			  <div class="modal-header">
+			    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			    <h4 class="modal-title" id="exampleModalLabel">职位信息</h4>
+			  </div>
+			  <div class="modal-body">
+			    
+	    		<form>
+			     <div class="form-group">
+				    <label for="exampleInputFile">公司logo</label>
+				    <input type="file" id="exampleInputFile" style="width: 568px;border: 1px solid #979797;">
+				    <img id="showImg" src="https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo_top_ca79a146.png" alt="" style="height:60px;width:60px">
+				  </div>
+			      <div class="form-group">
+			        <label for="message-text" class="control-label">职位名称</label>
+			        <input type="text" class="form-control" id="zhiwei" placeholder="输入职位名">
+			      </div>
+			      <div class="form-group">
+			        <label for="message-text" class="control-label">公司名称</label>
+			        <input type="text" class="form-control" id="gs" placeholder="输入公司名称">
+			      </div>
+			      <div class="form-group">
+			        <label for="message-text" class="control-label">工作经验</label>
+			        <input type="text" class="form-control" id="exp" placeholder="输入工作经验">
+			      </div>
+			      <div class="form-group">
+			        <label for="message-text" class="control-label">职位类型</label>
+			        <input type="text" class="form-control" id="type" placeholder="输入职位名称">
+			      </div>
+			      <div class="form-group">
+			        <label for="message-text" class="control-label">工作地点</label>
+			        <input type="text" class="form-control" id="address" placeholder="输入工作地点">
+			      </div>
+			      <div class="form-group">
+			        <label for="message-text" class="control-label">岗位薪资</label>
+			        <input type="text" class="form-control" id="money" placeholder="输入岗位薪资">
+			      </div>
+			    </form>
+			  </div>
+			  <div class="modal-footer">
+			    <button type="button" class="btn btn-primary" id="sub">提交</button>
+			    <button type="button" class="btn btn-primary" id="update" style="display: none;">修改好了</button>
+			  </div>
+			</div>
+		  </div>
+		</div>
+		<table class="table table-bordered">
+			<tr>
+				<td>序号</td>
+				<td>公司logo</td>
+				<td>职位名称</td>
+				<td>公司名称</td>
+				<td>工作经验</td>
+				<td>职位类型</td>
+				<td>工作地点</td>
+				<td>职位薪资</td>
+				<td>操作</td>
+			</tr>
+		</table>
+		
+		<div class="box">
+			<!--<p id="null">空荡荡！！！</p>-->
+		</div>
+		<div class="M-box m-style"></div>
+	</body>
+	<script src="artTamplate.js"></script>
+	<script src="jquery.pagination.js"></script>
+	<script src="jquery.cookie.js"></script>
+	<script>
+//		$('#myModal').on('shown.bs.modal', function () {
+//			$('#myInput').focus()
+//		})
+		var username = $("#username");
+		var name = location.search.split('=')[1];
+		$("#username").html('欢迎: '+name);
+		
+		var $table = $('.table'),$showImg = $("#showImg"),$tj = $("#tj"),
+		$exampleInputFile = $("#exampleInputFile"),$zhiwei = $("#zhiwei"),
+		$gs = $("#gs"),$exp = $("#exp"),$type = $("#type"),
+		$address = $("#address"),
+		$money = $("#money"),$sub = $("#sub"),$box = $(".box"),
+		$update = $("#update");
+		
+		
+		var Storage = localStorage;
+		//加载页数
+		function loadshu(){
+			$.post('/api/comment',function(data){
+				count = data.list;
+				//
+				if(count == 0){
+					count = 1;
+				}
+			}).then(function(){//分页
+					
+					$('.M-box').pagination({
+				    totalData: count,
+				    showData: 5,
+				    coping: true,
+				    isHide:true,
+				    current:Storage.page,
+				    callback: function (api) {
+				    	Storage.page = api.getCurrent();
+//				    	localStorage.setItem('page', api.getCurrent());
+//				    	console.log(localStorage.getItem("page"))
+				    	loadlist(Storage.page);
+				    	index(Storage.page);
+			   		}
+				});
+			});
+		}
+		loadshu();
+		
+		loadlist(Storage.page);
+		//根据页码加载列表
+		function loadlist(page=1){
+			$.post('/api/page',{page},function(data){
+			    		var html = template("listTemp",data);
+							$box.html(html);
+			    	}).then(function(){
+			    		index(Storage.page);
+			    	})
+		}
+		
+		//序号
+		function index(pag = 1){
+			var len = $('.tr_t').length;
+			for(let i=0;i<len;i++){
+				$($('.tr_t')[i]).find('.xh').text(i+1+(pag-1)*5);
+			}
+		}
+		
+		
+		//图片上传
+		$exampleInputFile.on("change",function(event){
+			event.preventDefault();//阻止默认
+			//console.log(111);
+			//判断用户是否上传的是图片
+			var file = this.files[0];
+	//		console.log(file);
+			if(!file) return;
+			if(file.type == "image/png"||file.type == "image/jpeg"){
+				//开始上传
+				var form = new FormData();//返回一个家电form对象
+				form.append("upload",file);
+				$.ajax({
+					type:"POST",
+					url:"/upload",
+					dataType:"json",
+					data:form,
+					contentType:false,//
+					processData:false,//数据进行序列化，false
+				})
+				.done(function(res){
+	//				console.log(res)
+					if(!res.code){
+						$showImg.attr({
+							src:res.img
+						});
+					};
+				});
+			};
+		});
+		//添加
+		$sub.on('click',function(event){
+			event.preventDefault();
+			var pa ={};
+				pa.img = $showImg.attr("src");
+				pa.zhiwei = $zhiwei.val().trim();
+				pa.gs = $gs.val().trim();
+				pa.exp = $exp.val().trim();
+				pa.type = $type.val().trim();
+				pa.address = $address.val().trim();
+				pa.money = $money.val().trim();
+			if(!pa.zhiwei||!pa.gs||!pa.exp||!pa.type||!pa.address||!pa.money){
+				alert("信息不完善");
+				return
+			}
+			$.post("/upload/comment",pa,function(res){
+//					 console.log(res);
+				var li = template("listTemp",{list:[res.list]})
+				if($(".box").find(".tr_t").length == 5){
+//					(当前页面加载满后自动跳转到后一页)
+					loadshu();
+				}
+				else{
+					if($box.find('#null').length){
+							$box.html(li);
+					}else{
+							$box.append(li);
+							loadlist(Storage.page);
+						}
+				};			
+			});
+			$('#exampleModal').modal('hide');
+		});
+		$tj.on('click',function(event){
+			event.preventDefault();
+			$showImg.attr('src',"https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo_top_ca79a146.png");
+			$zhiwei.val('');
+			$gs.val('');
+			$exp.val('');
+			$type.val('');
+			$address.val('');
+			$money.val('');
+		})
+		//删除
+		
+		$('.box').on('click','#sc',function(){
+//			console.log(this);
+			var _this = this;
+			$.post("/delete/comment",{_id:this.dataset.id},function(data){
+				$(_this).parents('#tr-t').remove();
+//				if($(".box").find('#tr-t').length == 0){
+//					$(".box").html(`<p id="null">空荡荡！！！</p>`)
+//				};
+			}).then(function(){//删除后的分页操作
+				if($(".box").find('#tr-t').length == 0){		
+					if(Storage.page!=1){//页数不能小于1
+						Storage.page -= 1;
+					};
+					loadshu();
+//					loadlist(Storage.page);
+				};
+				loadlist(Storage.page);
+//				console.log(Storage.page);
+			});
+		});
+		//修改
+		$('.box').on('click','#xg',function(){
+			$("#exampleModal").modal("show");
+			$('#update').show();
+			$('#sub').hide();
+			var par =$(this).parents('#tr-t');
+			var img = par.find('#img').attr('src'),
+				mc = par.find('#mc').text(),
+				gs = par.find('#gs').text(),
+				jy = par.find('#jy').text(),
+				lx = par.find('#lx').text(),
+				dd = par.find('#dd').text(),
+				xz = par.find('#xz').text();
+				
+			$showImg.attr('src',img);
+			$zhiwei.val(mc);
+			$gs.val(gs);
+			$exp.val(jy);
+			$type.val(lx);
+			$address.val(dd);
+			$money.val(xz);
+			$update.id = this.dataset.id;
+		})
+		//修改后提交更新
+		$update.on('click',function(){
+			var params = {};
+				params.img = $showImg.attr('src');
+				params.mc = $zhiwei.val();
+				params.gs = $gs.val();
+				params.jy = $exp.val();
+				params.lx = $type.val();
+				params.dd = $address.val();
+				params.xz = $money.val();
+				params._id = $update.id;
+				console.log(params);
+				if(!params._id) return;
+				if(!params.mc || !params.gs || !params.jy || !params.lx
+					|| !params.dd || !params.xz){
+						alert("请完善信息！！")
+						return;
+					};
+				$.post('/update/comment',params,function(res){
+					console.log(res);
+				var html = template("listTemp",{list:[res.doc]});
+	
+				$(".upd[data-id="+$update.id+"]").parents("#tr-t").replaceWith(html);
+					console.log("sadsa");
+					$update.id = null;			
+					$showImg.attr('src');
+					$update.hide();
+					$sub.show();
+					$("#exampleModal").modal("hide");	
+				}).then(function(){
+					index(Storage.page);
+				});
+		});
+	</script>
+	<script type="text/html" id="listTemp">
+	    {{each list as item index}}
+			<tr class="tr_t" style="text-align: center;" id="tr-t">
+				<td class="xh">1</td>
+				<td><img src="{{item.img}}" id="img" style="width: 30px;height: 30px;"/></td>
+				<td id="mc">{{item.zwmc}}</td>
+				<td id="gs">{{item.gsmc}}</td>
+				<td id="jy">{{item.gzjy}}</td>
+				<td id="lx">{{item.zwlx}}</td>
+				<td id="dd">{{item.gzdd}}</td>
+				<td id="xz">{{item.gwxz}}</td>
+				<td>
+					<span id="xg" class="upd" data-id={{item._id}}>修改</span>
+					<span id="sc" class="det" data-id={{item._id}}>删除</span>
+				</td>
+			</tr>
+	    {{/each}}
+	</script>
+	<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	
+</html>
